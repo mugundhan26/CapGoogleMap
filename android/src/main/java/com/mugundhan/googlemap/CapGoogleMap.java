@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -12,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -32,7 +30,6 @@ import com.google.android.libraries.maps.GoogleMapOptions;
 import com.google.android.libraries.maps.MapView;
 import com.google.android.libraries.maps.OnMapReadyCallback;
 import com.google.android.libraries.maps.UiSettings;
-import com.google.android.libraries.maps.model.BitmapDescriptorFactory;
 import com.google.android.libraries.maps.model.CameraPosition;
 import com.google.android.libraries.maps.model.CircleOptions;
 import com.google.android.libraries.maps.model.LatLng;
@@ -47,24 +44,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
-
-@CapacitorPlugin(
-    name = "CapGoogleMap",
-    permissions = {
-        @Permission(
-            strings = { Manifest.permission.ACCESS_FINE_LOCATION },
-            alias = "geolocation"
-        ),
+@CapacitorPlugin(name = "CapGoogleMap", permissions = {
+        @Permission(strings = { Manifest.permission.ACCESS_FINE_LOCATION }, alias = "geolocation"),
         @Permission(strings = { Manifest.permission.INTERNET }, alias = "internet"),
-    }
-)
-public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMap.OnMyLocationClickListener, GoogleMap.OnMyLocationButtonClickListener {
+})
+public class CapGoogleMap extends Plugin
+        implements OnMapReadyCallback, GoogleMap.OnMyLocationClickListener, GoogleMap.OnMyLocationButtonClickListener {
 
     private MapView mapView;
     GoogleMap googleMap;
@@ -123,7 +111,7 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
     @PluginMethod()
     public void initialize(PluginCall call) {
         /*
-         *  TODO: Check API key
+         * TODO: Check API key
          */
         call.resolve();
     }
@@ -138,6 +126,7 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
         final Float zoom = call.getFloat("zoom", DEFAULT_ZOOM);
         final Double latitude = call.getDouble("latitude");
         final Double longitude = call.getDouble("longitude");
+        final boolean liteMode = call.getBoolean("enabled", false);
 
         final CapGoogleMap ctx = this;
         getBridge().getActivity().runOnUiThread(new Runnable() {
@@ -151,13 +140,7 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
 
                 GoogleMapOptions googleMapOptions = new GoogleMapOptions();
                 googleMapOptions.camera(cameraPosition);
-
-                if (mapViewParentId != null){
-                    View viewToRemove = ((ViewGroup) getBridge().getWebView().getParent()).findViewById(mapViewParentId);
-                    if (viewToRemove != null){
-                        ((ViewGroup) getBridge().getWebView().getParent()).removeViewInLayout(viewToRemove);
-                    }
-                }
+                googleMapOptions.liteMode(liteMode);
 
                 FrameLayout mapViewParent = new FrameLayout(getBridge().getContext());
                 mapViewParentId = View.generateViewId();
@@ -165,7 +148,8 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
 
                 mapView = new MapView(getBridge().getContext(), googleMapOptions);
 
-                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(getScaledPixels(width), getScaledPixels(height));
+                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(getScaledPixels(width),
+                        getScaledPixels(height));
                 lp.topMargin = getScaledPixels(y);
                 lp.leftMargin = getScaledPixels(x);
 
@@ -192,22 +176,12 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
         final String snippet = call.getString("snippet", "");
         final Boolean isFlat = call.getBoolean("isFlat", true);
         final JSObject metadata = call.getObject("metadata");
-        final String url = call.getString("iconUrl", "");
-        final Boolean draggable = call.getBoolean("draggable", false);
-        final Double rotation = call.getDouble("rotation", 0d);
-        final String key = call.getString("key", "");
-
-        if (googleMap == null){
-            call.reject("Map is not ready");
-            return;
-        }
-
-        Bitmap imageBitmap = getBitmapFromURL(url);
+        final Float rotation = call.getFloat("rotation", 0f);
+        final String tempKey = call.getString("key", "");
 
         getBridge().getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                String tempKey = key;
                 LatLng latLng = new LatLng(latitude, longitude);
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(latLng);
@@ -215,12 +189,7 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
                 markerOptions.title(title);
                 markerOptions.snippet(snippet);
                 markerOptions.flat(isFlat);
-                markerOptions.draggable(draggable);
                 markerOptions.rotation(rotation);
-
-                if (imageBitmap != null) {
-                    markerOptions.icon(BitmapDescriptorFactory.fromBitmap(imageBitmap));
-                }
 
                 Marker marker = googleMap.addMarker(markerOptions);
 
@@ -238,6 +207,7 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
 
                 // get marker specific values
                 markerResult.put("id", marker.getId());
+                // set a value key here
                 markerResult.put("key", tempKey);
                 result.put("marker", markerResult);
 
@@ -438,12 +408,8 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
         getBridge().executeOnMainThread(new Runnable() {
             @Override
             public void run() {
-                if (mapViewParentId != null){
-                    View viewToRemove = ((ViewGroup) getBridge().getWebView().getParent()).findViewById(mapViewParentId);
-                    if (viewToRemove != null){
-                        ((ViewGroup) getBridge().getWebView().getParent()).removeViewInLayout(viewToRemove);
-                    }
-                }
+                View viewToRemove = ((ViewGroup) getBridge().getWebView().getParent()).findViewById(mapViewParentId);
+                ((ViewGroup) getBridge().getWebView().getParent()).removeViewInLayout(viewToRemove);
             }
         });
     }
@@ -453,12 +419,8 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
         getBridge().executeOnMainThread(new Runnable() {
             @Override
             public void run() {
-                if (mapViewParentId != null){
-                    View viewToHide = ((ViewGroup) getBridge().getWebView().getParent()).findViewById(mapViewParentId);
-                    if (viewToHide != null){
-                        viewToHide.setVisibility(View.INVISIBLE);
-                    }
-                }
+                View viewToHide = ((ViewGroup) getBridge().getWebView().getParent()).findViewById(mapViewParentId);
+                viewToHide.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -468,12 +430,8 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
         getBridge().executeOnMainThread(new Runnable() {
             @Override
             public void run() {
-                if (mapViewParentId != null){
-                    View viewToShow = ((ViewGroup) getBridge().getWebView().getParent()).findViewById(mapViewParentId);
-                    if (viewToShow != null){
-                        viewToShow.setVisibility(View.VISIBLE);
-                    }
-                }
+                View viewToShow = ((ViewGroup) getBridge().getWebView().getParent()).findViewById(mapViewParentId);
+                viewToShow.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -490,20 +448,20 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
                 JSObject nearLeft = new JSObject();
                 JSObject nearRight = new JSObject();
 
-                farLeft.put("latitude",googleMap.getProjection().getVisibleRegion().farLeft.latitude);
-                farLeft.put("longitude",googleMap.getProjection().getVisibleRegion().farLeft.longitude);
-                farRight.put("latitude",googleMap.getProjection().getVisibleRegion().farRight.latitude);
-                farRight.put("longitude",googleMap.getProjection().getVisibleRegion().farRight.longitude);
-                nearLeft.put("latitude",googleMap.getProjection().getVisibleRegion().nearLeft.latitude);
-                nearLeft.put("longitude",googleMap.getProjection().getVisibleRegion().nearLeft.longitude);
-                nearRight.put("latitude",googleMap.getProjection().getVisibleRegion().nearRight.latitude);
-                nearRight.put("longitude",googleMap.getProjection().getVisibleRegion().nearRight.longitude);
+                farLeft.put("latitude", googleMap.getProjection().getVisibleRegion().farLeft.latitude);
+                farLeft.put("longitude", googleMap.getProjection().getVisibleRegion().farLeft.longitude);
+                farRight.put("latitude", googleMap.getProjection().getVisibleRegion().farRight.latitude);
+                farRight.put("longitude", googleMap.getProjection().getVisibleRegion().farRight.longitude);
+                nearLeft.put("latitude", googleMap.getProjection().getVisibleRegion().nearLeft.latitude);
+                nearLeft.put("longitude", googleMap.getProjection().getVisibleRegion().nearLeft.longitude);
+                nearRight.put("latitude", googleMap.getProjection().getVisibleRegion().nearRight.latitude);
+                nearRight.put("longitude", googleMap.getProjection().getVisibleRegion().nearRight.longitude);
 
-                bounds.put("farLeft",farLeft);
-                bounds.put("farRight",farRight);
-                bounds.put("nearLeft",nearLeft);
-                bounds.put("nearRight",nearRight);
-                result.put("bounds",bounds);
+                bounds.put("farLeft", farLeft);
+                bounds.put("farRight", farRight);
+                bounds.put("nearLeft", nearLeft);
+                bounds.put("nearRight", nearRight);
+                result.put("bounds", bounds);
 
                 call.resolve(result);
             }
@@ -552,7 +510,8 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
     @PluginMethod()
     public void settings(final PluginCall call) {
 
-        final boolean allowScrollGesturesDuringRotateOrZoom = call.getBoolean("allowScrollGesturesDuringRotateOrZoom", true);
+        final boolean allowScrollGesturesDuringRotateOrZoom = call.getBoolean("allowScrollGesturesDuringRotateOrZoom",
+                true);
 
         final boolean compassButton = call.getBoolean("compassButton", false);
         final boolean zoomButton = call.getBoolean("zoomButton", true);
@@ -589,21 +548,18 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
     @PluginMethod()
     public void setCamera(PluginCall call) {
 
+        final float viewingAngle = call.getFloat("viewingAngle", googleMap.getCameraPosition().tilt);
+        final float bearing = call.getFloat("bearing", googleMap.getCameraPosition().bearing);
+        final Float zoom = call.getFloat("zoom", googleMap.getCameraPosition().zoom);
+        final Double latitude = call.getDouble("latitude", googleMap.getCameraPosition().target.latitude);
+        final Double longitude = call.getDouble("longitude", googleMap.getCameraPosition().target.longitude);
 
+        final Boolean animate = call.getBoolean("animate", false);
+        Double animationDuration = call.getDouble("animationDuration", 1000.0);
 
         getBridge().executeOnMainThread(new Runnable() {
             @Override
             public void run() {
-
-                float viewingAngle = call.getFloat("viewingAngle", googleMap.getCameraPosition().tilt);
-                float bearing = call.getFloat("bearing", googleMap.getCameraPosition().bearing);
-                Float zoom = call.getFloat("zoom", googleMap.getCameraPosition().zoom);
-                Double latitude = call.getDouble("latitude", googleMap.getCameraPosition().target.latitude);
-                Double longitude = call.getDouble("longitude", googleMap.getCameraPosition().target.longitude);
-
-                Boolean animate = call.getBoolean("animate", false);
-                Double animationDuration = call.getDouble("animationDuration", 1000.0);
-
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(new LatLng(latitude, longitude))
                         .zoom(zoom)
@@ -614,7 +570,7 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
                 if (animate) {
                     /*
                      * TODO: Implement animationDuration
-                     * */
+                     */
                     googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 } else {
                     googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -628,8 +584,8 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
     @PluginMethod()
     public void setMapStyle(PluginCall call) {
         /*
-            https://mapstyle.withgoogle.com/
-        */
+         * https://mapstyle.withgoogle.com/
+         */
         final String mapStyle = call.getString("jsonString", "");
 
         getBridge().executeOnMainThread(new Runnable() {
@@ -741,36 +697,6 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
     }
 
     @PluginMethod()
-    public void setOnMarkerDragListener(PluginCall call) {
-
-        final CapGoogleMap ctx = this;
-
-        getBridge().executeOnMainThread(new Runnable() {
-            @Override
-            public void run() {
-                googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-                    @Override
-                    public void onMarkerDragStart(Marker marker) {
-                        ctx.onMarkerDragStart(marker);
-                    }
-
-                    @Override
-                    public void onMarkerDrag(Marker marker) {
-                        // not implemented
-                    }
-
-                    @Override
-                    public void onMarkerDragEnd(Marker marker) {
-                        ctx.onMarkerDragEnd(marker);
-                    }
-                });
-            }
-        });
-
-        call.resolve();
-    }
-
-    @PluginMethod()
     public void enableCurrentLocation(final PluginCall call) {
 
         final boolean enableLocation = call.getBoolean("enabled", false);
@@ -779,7 +705,10 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
             @SuppressLint("MissingPermission")
             @Override
             public void run() {
-                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(getContext(),
+                                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     call.error("Permission for location not granted");
                 } else {
                     googleMap.setMyLocationEnabled(enableLocation);
@@ -820,7 +749,7 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
 
         result.put("result", location);
 
-        notifyListeners("didTapAt", result);
+        notifyListeners("didTapAt", location);
     }
 
     public void onMarkerClick(Marker marker) {
@@ -843,49 +772,9 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
         notifyListeners("didTap", result);
     }
 
-    public void onMarkerDragStart(Marker marker) {
-        JSObject result = new JSObject();
-        JSObject location = new JSObject();
-        JSObject coordinates = new JSObject();
-        JSObject metadata = (JSObject) marker.getTag();
-
-        coordinates.put("latitude", marker.getPosition().latitude);
-        coordinates.put("longitude", marker.getPosition().longitude);
-
-        location.put("coordinates", coordinates);
-
-        result.put("id", marker.getId());
-        result.put("title", marker.getTitle());
-        result.put("snippet", marker.getSnippet());
-        result.put("result", location);
-        result.put("metadata", metadata);
-
-        notifyListeners("didBeginDragging", result);
-    }
-
-    public void onMarkerDragEnd(Marker marker) {
-        JSObject result = new JSObject();
-        JSObject location = new JSObject();
-        JSObject coordinates = new JSObject();
-        JSObject metadata = (JSObject) marker.getTag();
-
-        coordinates.put("latitude", marker.getPosition().latitude);
-        coordinates.put("longitude", marker.getPosition().longitude);
-
-        location.put("coordinates", coordinates);
-
-        result.put("id", marker.getId());
-        result.put("title", marker.getTitle());
-        result.put("snippet", marker.getSnippet());
-        result.put("result", location);
-        result.put("metadata", metadata);
-
-        notifyListeners("didEndDragging", result);
-    }
-
     public boolean onMyLocationButtonClick() {
         /*
-         *  TODO: Add handler
+         * TODO: Add handler
          */
         return false;
     }
@@ -906,17 +795,4 @@ public class CapGoogleMap extends Plugin implements OnMapReadyCallback, GoogleMa
         return (int) (pixels * scale + 0.5f);
     }
 
-    public Bitmap getBitmapFromURL(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap bitmap = BitmapFactory.decodeStream(input);
-            return Bitmap.createScaledBitmap(bitmap, getScaledPixels(bitmap.getWidth()), this.getScaledPixels(bitmap.getHeight()), true);
-        } catch (IOException e) {
-            return null;
-        }
-    }
 }

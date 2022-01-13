@@ -12,12 +12,12 @@ export interface CapGoogleMapPlugin {
     latitude?: number;
     longitude?: number;
     zoom?: number;
+    liteMode?: boolean;
   }): Promise<any>;
 
   // iOS Init
   initialize(options: { key: string }): Promise<any>;
 
-  // Add a marker
   /** Adds a marker on the map */
   addMarker(options: {
     latitude: number;
@@ -26,14 +26,10 @@ export interface CapGoogleMapPlugin {
     title?: string;
     snippet?: string;
     isFlat?: boolean;
-    iconUrl?: string;
-    draggable?: boolean;
+    url?: string;
     rotation?: number;
     key?: string;
   }): Promise<any>;
-
-  /** Removes a marker on the map */
-  removeMarker(options: { id: number }): Promise<any>;
 
   /** Repositions the camera */
   setCamera(options: {
@@ -131,11 +127,7 @@ export interface CapGoogleMapPlugin {
     listenerFunc: (results: any) => void
   ): PluginListenerHandle;
   addListener(
-    eventName: 'didBeginDragging',
-    listenerFunc: (results: any) => void
-  ): PluginListenerHandle;
-  addListener(
-    eventName: 'didEndDragging',
+    eventName: 'dragEnded',
     listenerFunc: (results: any) => void
   ): PluginListenerHandle;
   addListener(
