@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+
 
 @CapacitorPlugin(name = "CapGoogleMap", permissions = {
         @Permission(strings = { Manifest.permission.ACCESS_FINE_LOCATION }, alias = "geolocation"),
@@ -177,6 +179,7 @@ public class CapGoogleMap extends Plugin
         final Boolean isFlat = call.getBoolean("isFlat", true);
         final JSObject metadata = call.getObject("metadata");
         final Float rotation = call.getFloat("rotation", 0f);
+        final String icon = call.getString("url", "");
         final String tempKey = call.getString("key", "");
 
         getBridge().getActivity().runOnUiThread(new Runnable() {
@@ -195,7 +198,6 @@ public class CapGoogleMap extends Plugin
 
                 // set metadata to marker
                 marker.setTag(metadata);
-
                 // get auto-generated id of the just added marker,
                 // put this marker into a hashmap with the corresponding id,
                 // so we can retrieve the marker by id later on
@@ -768,7 +770,8 @@ public class CapGoogleMap extends Plugin
         result.put("snippet", marker.getSnippet());
         result.put("result", location);
         result.put("metadata", metadata);
-
+        result.put("rotation", marker.getRotation());
+        googleMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(getContext()));
         notifyListeners("didTap", result);
     }
 

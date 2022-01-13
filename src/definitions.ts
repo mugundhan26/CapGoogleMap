@@ -31,6 +31,9 @@ export interface CapGoogleMapPlugin {
     key?: string;
   }): Promise<any>;
 
+  // Marker remove
+  removeMarker(options: { id: string }): Promise<any>;
+
   /** Repositions the camera */
   setCamera(options: {
     viewingAngle?: number;
