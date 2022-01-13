@@ -32,7 +32,7 @@ export interface CapGoogleMapPlugin {
   }): Promise<any>;
 
   // Marker remove
-  removeMarker(options: { id: string }): Promise<any>;
+  // removeMarker(options: { id: string }): Promise<any>;
 
   /** Repositions the camera */
   setCamera(options: {
