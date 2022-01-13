@@ -17,7 +17,6 @@ npx cap sync
 * [`create(...)`](#create)
 * [`initialize(...)`](#initialize)
 * [`addMarker(...)`](#addmarker)
-* [`removeMarker(...)`](#removemarker)
 * [`setCamera(...)`](#setcamera)
 * [`setMapType(...)`](#setmaptype)
 * [`setIndoorEnabled(...)`](#setindoorenabled)
@@ -44,8 +43,7 @@ npx cap sync
 * [`setOnMyLocationClickListener()`](#setonmylocationclicklistener)
 * [`setOnMyLocationButtonClickListener()`](#setonmylocationbuttonclicklistener)
 * [`addListener('didTap', ...)`](#addlistenerdidtap)
-* [`addListener('didBeginDragging', ...)`](#addlistenerdidbegindragging)
-* [`addListener('didEndDragging', ...)`](#addlistenerdidenddragging)
+* [`addListener('dragEnded', ...)`](#addlistenerdragended)
 * [`addListener('didTapAt', ...)`](#addlistenerdidtapat)
 * [`addListener('didTapPOIWithPlaceID', ...)`](#addlistenerdidtappoiwithplaceid)
 * [`addListener('didChange', ...)`](#addlistenerdidchange)
@@ -75,12 +73,12 @@ echo(options: { value: string; }) => Promise<{ value: string; }>
 ### create(...)
 
 ```typescript
-create(options: { width: number; height: number; x: number; y: number; latitude?: number; longitude?: number; zoom?: number; }) => Promise<any>
+create(options: { width: number; height: number; x: number; y: number; latitude?: number; longitude?: number; zoom?: number; liteMode?: boolean; }) => Promise<any>
 ```
 
-| Param         | Type                                                                                                                        |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ width: number; height: number; x: number; y: number; latitude?: number; longitude?: number; zoom?: number; }</code> |
+| Param         | Type                                                                                                                                            |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ width: number; height: number; x: number; y: number; latitude?: number; longitude?: number; zoom?: number; liteMode?: boolean; }</code> |
 
 **Returns:** <code>Promise&lt;any&gt;</code>
 
@@ -105,31 +103,14 @@ initialize(options: { key: string; }) => Promise<any>
 ### addMarker(...)
 
 ```typescript
-addMarker(options: { latitude: number; longitude: number; opacity?: number; title?: string; snippet?: string; isFlat?: boolean; iconUrl?: string; draggable?: boolean; rotation?: number; key?: string; }) => Promise<any>
+addMarker(options: { latitude: number; longitude: number; opacity?: number; title?: string; snippet?: string; isFlat?: boolean; url?: string; rotation?: number; key?: string; }) => Promise<any>
 ```
 
 Adds a marker on the map
 
-| Param         | Type                                                                                                                                                                                                |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ latitude: number; longitude: number; opacity?: number; title?: string; snippet?: string; isFlat?: boolean; iconUrl?: string; draggable?: boolean; rotation?: number; key?: string; }</code> |
-
-**Returns:** <code>Promise&lt;any&gt;</code>
-
---------------------
-
-
-### removeMarker(...)
-
-```typescript
-removeMarker(options: { id: number; }) => Promise<any>
-```
-
-Removes a marker on the map
-
-| Param         | Type                         |
-| ------------- | ---------------------------- |
-| **`options`** | <code>{ id: number; }</code> |
+| Param         | Type                                                                                                                                                                       |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ latitude: number; longitude: number; opacity?: number; title?: string; snippet?: string; isFlat?: boolean; url?: string; rotation?: number; key?: string; }</code> |
 
 **Returns:** <code>Promise&lt;any&gt;</code>
 
@@ -522,31 +503,15 @@ addListener(eventName: 'didTap', listenerFunc: (results: any) => void) => Plugin
 --------------------
 
 
-### addListener('didBeginDragging', ...)
+### addListener('dragEnded', ...)
 
 ```typescript
-addListener(eventName: 'didBeginDragging', listenerFunc: (results: any) => void) => PluginListenerHandle
+addListener(eventName: 'dragEnded', listenerFunc: (results: any) => void) => PluginListenerHandle
 ```
 
 | Param              | Type                                   |
 | ------------------ | -------------------------------------- |
-| **`eventName`**    | <code>'didBeginDragging'</code>        |
-| **`listenerFunc`** | <code>(results: any) =&gt; void</code> |
-
-**Returns:** <code><a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
-
---------------------
-
-
-### addListener('didEndDragging', ...)
-
-```typescript
-addListener(eventName: 'didEndDragging', listenerFunc: (results: any) => void) => PluginListenerHandle
-```
-
-| Param              | Type                                   |
-| ------------------ | -------------------------------------- |
-| **`eventName`**    | <code>'didEndDragging'</code>          |
+| **`eventName`**    | <code>'dragEnded'</code>               |
 | **`listenerFunc`** | <code>(results: any) =&gt; void</code> |
 
 **Returns:** <code><a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
