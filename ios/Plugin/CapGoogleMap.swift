@@ -63,7 +63,7 @@ public class CapGoogleMap: CAPPlugin, GMSMapViewDelegate, GMSPanoramaViewDelegat
         let metadata = call.getObject("metadata") ?? [:]
         let url = URL(string: call.getString("iconUrl", ""))
         let rotation = call.getDouble("rotation") ?? 0
-        let key = URL(string: call.getString("key", ""))
+        let key:Any = call.getString("key", "")
         var imageData: Data?
 
         DispatchQueue.global().async {

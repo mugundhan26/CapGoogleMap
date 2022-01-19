@@ -15,11 +15,19 @@ class CapGoogleMapTests: XCTestCase {
     func testEcho() {
         // This is an example of a functional test case for a plugin.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
-
-        let implementation = CapGoogleMap()
+        
         let value = "Hello, World!"
-        let result = implementation.echo(value)
-
-        XCTAssertEqual(value, result)
+        let plugin = MyPlugin()
+        
+        let call = CAPPluginCall(callbackId: "test", options: [
+            "value": value
+        ], success: { (result, call) in
+            let resultValue = result!.data["value"] as? String
+            XCTAssertEqual(value, resultValue)
+        }, error: { (err) in
+            XCTFail("Error shouldn't have been called")
+        })
+        
+        plugin.echo(call!)
     }
 }
