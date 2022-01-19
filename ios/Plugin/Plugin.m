@@ -3,7 +3,7 @@
 
 // Define the plugin using the CAP_PLUGIN Macro, and
 // each method the plugin supports using the CAP_PLUGIN_METHOD macro.
-CAP_PLUGIN(CapGoogleMapPlugin, "CapGoogleMap",
+CAP_PLUGIN(CapGoogleMap, "CapGoogleMap",
            CAP_PLUGIN_METHOD(initialize, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(create, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(addMarker, CAPPluginReturnPromise);

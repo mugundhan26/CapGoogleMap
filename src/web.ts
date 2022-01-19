@@ -6,7 +6,7 @@ import { CircleOptions, LatLng, PolygonOptions, PolylineOptions } from './types/
 export class CapGoogleMapWeb extends WebPlugin implements CapGoogleMapPlugin {
   constructor() {
     super({
-      name: 'CapacitorGoogleMaps',
+      name: 'CapGoogleMap',
       platforms: ['web'],
     });
   }
