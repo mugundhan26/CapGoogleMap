@@ -48,6 +48,8 @@ npx cap sync
 * [`addListener('didTapPOIWithPlaceID', ...)`](#addlistenerdidtappoiwithplaceid)
 * [`addListener('didChange', ...)`](#addlistenerdidchange)
 * [`addListener('onMapReady', ...)`](#addlisteneronmapready)
+* [`addListener(string, ...)`](#addlistenerstring)
+* [`removeAllListeners()`](#removealllisteners)
 * [Interfaces](#interfaces)
 
 </docgen-index>
@@ -58,14 +60,14 @@ npx cap sync
 ### echo(...)
 
 ```typescript
-echo(options: { value: string; }) => Promise<{ value: string; }>
+echo(options: { value: string; }) => any
 ```
 
 | Param         | Type                            |
 | ------------- | ------------------------------- |
 | **`options`** | <code>{ value: string; }</code> |
 
-**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -73,14 +75,14 @@ echo(options: { value: string; }) => Promise<{ value: string; }>
 ### create(...)
 
 ```typescript
-create(options: { width: number; height: number; x: number; y: number; latitude?: number; longitude?: number; zoom?: number; liteMode?: boolean; }) => Promise<any>
+create(options: { width: number; height: number; x: number; y: number; latitude?: number; longitude?: number; zoom?: number; liteMode?: boolean; }) => any
 ```
 
 | Param         | Type                                                                                                                                            |
 | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | **`options`** | <code>{ width: number; height: number; x: number; y: number; latitude?: number; longitude?: number; zoom?: number; liteMode?: boolean; }</code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -88,14 +90,14 @@ create(options: { width: number; height: number; x: number; y: number; latitude?
 ### initialize(...)
 
 ```typescript
-initialize(options: { key: string; }) => Promise<any>
+initialize(options: { key: string; }) => any
 ```
 
 | Param         | Type                          |
 | ------------- | ----------------------------- |
 | **`options`** | <code>{ key: string; }</code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -103,7 +105,7 @@ initialize(options: { key: string; }) => Promise<any>
 ### addMarker(...)
 
 ```typescript
-addMarker(options: { latitude: number; longitude: number; opacity?: number; title?: string; snippet?: string; isFlat?: boolean; url?: string; rotation?: number; key?: string; }) => Promise<any>
+addMarker(options: { latitude: number; longitude: number; opacity?: number; title?: string; snippet?: string; isFlat?: boolean; url?: string; rotation?: number; key?: string; }) => any
 ```
 
 Adds a marker on the map
@@ -112,7 +114,7 @@ Adds a marker on the map
 | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **`options`** | <code>{ latitude: number; longitude: number; opacity?: number; title?: string; snippet?: string; isFlat?: boolean; url?: string; rotation?: number; key?: string; }</code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -120,16 +122,16 @@ Adds a marker on the map
 ### setCamera(...)
 
 ```typescript
-setCamera(options: { viewingAngle?: number; bearing?: number; zoom?: number; latitude?: number; longitude?: number; animate?: boolean; animationDuration?: number; coordinates?: LatLng[]; }) => Promise<any>
+setCamera(options: { viewingAngle?: number; bearing?: number; zoom?: number; latitude?: number; longitude?: number; animate?: boolean; animationDuration?: number; coordinates?: LatLng[]; }) => any
 ```
 
 Repositions the camera
 
-| Param         | Type                                                                                                                                                                                   |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ viewingAngle?: number; bearing?: number; zoom?: number; latitude?: number; longitude?: number; animate?: boolean; animationDuration?: number; coordinates?: LatLng[]; }</code> |
+| Param         | Type                                                                                                                                                                             |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ viewingAngle?: number; bearing?: number; zoom?: number; latitude?: number; longitude?: number; animate?: boolean; animationDuration?: number; coordinates?: {}; }</code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -137,7 +139,7 @@ Repositions the camera
 ### setMapType(...)
 
 ```typescript
-setMapType(options: { type: string; }) => Promise<any>
+setMapType(options: { type: string; }) => any
 ```
 
 Sets the map type
@@ -146,7 +148,7 @@ Sets the map type
 | ------------- | ------------------------------ |
 | **`options`** | <code>{ type: string; }</code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -154,7 +156,7 @@ Sets the map type
 ### setIndoorEnabled(...)
 
 ```typescript
-setIndoorEnabled(options: { enabled: boolean; }) => Promise<any>
+setIndoorEnabled(options: { enabled: boolean; }) => any
 ```
 
 Allows indoor maps to be enabled or disabled
@@ -163,7 +165,7 @@ Allows indoor maps to be enabled or disabled
 | ------------- | ---------------------------------- |
 | **`options`** | <code>{ enabled: boolean; }</code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -171,7 +173,7 @@ Allows indoor maps to be enabled or disabled
 ### setTrafficEnabled(...)
 
 ```typescript
-setTrafficEnabled(options: { enabled: boolean; }) => Promise<any>
+setTrafficEnabled(options: { enabled: boolean; }) => any
 ```
 
 Allows traffic information to be enabled or disabled
@@ -180,7 +182,7 @@ Allows traffic information to be enabled or disabled
 | ------------- | ---------------------------------- |
 | **`options`** | <code>{ enabled: boolean; }</code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -188,7 +190,7 @@ Allows traffic information to be enabled or disabled
 ### accessibilityElementsHidden(...)
 
 ```typescript
-accessibilityElementsHidden(options: { hidden: boolean; }) => Promise<any>
+accessibilityElementsHidden(options: { hidden: boolean; }) => any
 ```
 
 [iOS Only] To hide accessiblity elements
@@ -197,7 +199,7 @@ accessibilityElementsHidden(options: { hidden: boolean; }) => Promise<any>
 | ------------- | --------------------------------- |
 | **`options`** | <code>{ hidden: boolean; }</code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -205,7 +207,7 @@ accessibilityElementsHidden(options: { hidden: boolean; }) => Promise<any>
 ### padding(...)
 
 ```typescript
-padding(options: { top: number; left: number; right: number; bottom: number; }) => Promise<any>
+padding(options: { top: number; left: number; right: number; bottom: number; }) => any
 ```
 
 Adds padding around the map
@@ -214,7 +216,7 @@ Adds padding around the map
 | ------------- | -------------------------------------------------------------------------- |
 | **`options`** | <code>{ top: number; left: number; right: number; bottom: number; }</code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -222,12 +224,12 @@ Adds padding around the map
 ### clear()
 
 ```typescript
-clear() => Promise<any>
+clear() => any
 ```
 
 Clear any views like Marker, Shapes from the map
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -235,12 +237,12 @@ Clear any views like Marker, Shapes from the map
 ### close()
 
 ```typescript
-close() => Promise<any>
+close() => any
 ```
 
 Destroy the mapView, use in ionViewDidLeave and similar
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -248,12 +250,12 @@ Destroy the mapView, use in ionViewDidLeave and similar
 ### hide()
 
 ```typescript
-hide() => Promise<any>
+hide() => any
 ```
 
 Hide the mapView, use when preventing any overlapping on other views
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -261,12 +263,12 @@ Hide the mapView, use when preventing any overlapping on other views
 ### show()
 
 ```typescript
-show() => Promise<any>
+show() => any
 ```
 
 Show the hidden mapView
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -274,7 +276,7 @@ Show the hidden mapView
 ### settings(...)
 
 ```typescript
-settings(options: { allowScrollGesturesDuringRotateOrZoom?: boolean; compassButton?: boolean; consumesGesturesInView?: boolean; indoorPicker?: boolean; myLocationButton?: boolean; rotateGestures?: boolean; scrollGestures?: boolean; tiltGestures?: boolean; zoomGestures?: boolean; }) => Promise<any>
+settings(options: { allowScrollGesturesDuringRotateOrZoom?: boolean; compassButton?: boolean; consumesGesturesInView?: boolean; indoorPicker?: boolean; myLocationButton?: boolean; rotateGestures?: boolean; scrollGestures?: boolean; tiltGestures?: boolean; zoomGestures?: boolean; }) => any
 ```
 
 Map UI Settings
@@ -283,7 +285,7 @@ Map UI Settings
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **`options`** | <code>{ allowScrollGesturesDuringRotateOrZoom?: boolean; compassButton?: boolean; consumesGesturesInView?: boolean; indoorPicker?: boolean; myLocationButton?: boolean; rotateGestures?: boolean; scrollGestures?: boolean; tiltGestures?: boolean; zoomGestures?: boolean; }</code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -291,7 +293,7 @@ Map UI Settings
 ### reverseGeocodeCoordinate(...)
 
 ```typescript
-reverseGeocodeCoordinate(options: { latitude: number; longitude: number; }) => Promise<any>
+reverseGeocodeCoordinate(options: { latitude: number; longitude: number; }) => any
 ```
 
 Get Google Map address for a set of lat lng
@@ -300,7 +302,7 @@ Get Google Map address for a set of lat lng
 | ------------- | ----------------------------------------------------- |
 | **`options`** | <code>{ latitude: number; longitude: number; }</code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -308,7 +310,7 @@ Get Google Map address for a set of lat lng
 ### enableCurrentLocation(...)
 
 ```typescript
-enableCurrentLocation(options: { enabled: boolean; }) => Promise<any>
+enableCurrentLocation(options: { enabled: boolean; }) => any
 ```
 
 Enable user's current location
@@ -317,7 +319,7 @@ Enable user's current location
 | ------------- | ---------------------------------- |
 | **`options`** | <code>{ enabled: boolean; }</code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -325,7 +327,7 @@ Enable user's current location
 ### myLocation(...)
 
 ```typescript
-myLocation(options: any) => Promise<any>
+myLocation(options: any) => any
 ```
 
 Get user location
@@ -334,7 +336,7 @@ Get user location
 | ------------- | ---------------- |
 | **`options`** | <code>any</code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -342,7 +344,7 @@ Get user location
 ### viewBounds()
 
 ```typescript
-viewBounds() => Promise<any>
+viewBounds() => any
 ```
 
 Get view bounds in latlng. This polygon can be a trapezoid instead of a rectangle,
@@ -350,7 +352,7 @@ because a camera can have tilt. If the camera is directly over the center of the
 camera, the shape is rectangular, but if the camera is tilted, the shape will
 appear to be a trapezoid whose smallest side is closest to the point of view.
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -358,7 +360,7 @@ appear to be a trapezoid whose smallest side is closest to the point of view.
 ### setMapStyle(...)
 
 ```typescript
-setMapStyle(options: { jsonString: string; }) => Promise<any>
+setMapStyle(options: { jsonString: string; }) => any
 ```
 
 Add styles to map with a style JSON string format specific by Google
@@ -367,7 +369,7 @@ Add styles to map with a style JSON string format specific by Google
 | ------------- | ------------------------------------ |
 | **`options`** | <code>{ jsonString: string; }</code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -375,7 +377,7 @@ Add styles to map with a style JSON string format specific by Google
 ### addPolyline(...)
 
 ```typescript
-addPolyline(options: PolylineOptions) => Promise<any>
+addPolyline(options: PolylineOptions) => any
 ```
 
 Shapes
@@ -384,7 +386,7 @@ Shapes
 | ------------- | ----------------------------------------------------------- |
 | **`options`** | <code><a href="#polylineoptions">PolylineOptions</a></code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -392,14 +394,14 @@ Shapes
 ### addCircle(...)
 
 ```typescript
-addCircle(options: CircleOptions) => Promise<any>
+addCircle(options: CircleOptions) => any
 ```
 
 | Param         | Type                                                    |
 | ------------- | ------------------------------------------------------- |
 | **`options`** | <code><a href="#circleoptions">CircleOptions</a></code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -407,14 +409,14 @@ addCircle(options: CircleOptions) => Promise<any>
 ### addPolygon(...)
 
 ```typescript
-addPolygon(options: PolygonOptions) => Promise<any>
+addPolygon(options: PolygonOptions) => any
 ```
 
 | Param         | Type                                                      |
 | ------------- | --------------------------------------------------------- |
 | **`options`** | <code><a href="#polygonoptions">PolygonOptions</a></code> |
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -422,12 +424,12 @@ addPolygon(options: PolygonOptions) => Promise<any>
 ### setOnMarkerClickListener()
 
 ```typescript
-setOnMarkerClickListener() => Promise<any>
+setOnMarkerClickListener() => any
 ```
 
 Map click listeners
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -435,10 +437,10 @@ Map click listeners
 ### setOnMapClickListener()
 
 ```typescript
-setOnMapClickListener() => Promise<any>
+setOnMapClickListener() => any
 ```
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -446,10 +448,10 @@ setOnMapClickListener() => Promise<any>
 ### setOnPoiClickListener()
 
 ```typescript
-setOnPoiClickListener() => Promise<any>
+setOnPoiClickListener() => any
 ```
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -457,10 +459,10 @@ setOnPoiClickListener() => Promise<any>
 ### requestLocationPermission()
 
 ```typescript
-requestLocationPermission() => Promise<any>
+requestLocationPermission() => any
 ```
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -468,10 +470,10 @@ requestLocationPermission() => Promise<any>
 ### setOnMyLocationClickListener()
 
 ```typescript
-setOnMyLocationClickListener() => Promise<any>
+setOnMyLocationClickListener() => any
 ```
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -479,10 +481,10 @@ setOnMyLocationClickListener() => Promise<any>
 ### setOnMyLocationButtonClickListener()
 
 ```typescript
-setOnMyLocationButtonClickListener() => Promise<any>
+setOnMyLocationButtonClickListener() => any
 ```
 
-**Returns:** <code>Promise&lt;any&gt;</code>
+**Returns:** <code>any</code>
 
 --------------------
 
@@ -583,6 +585,33 @@ addListener(eventName: 'onMapReady', listenerFunc: (results: any) => void) => Pl
 --------------------
 
 
+### addListener(string, ...)
+
+```typescript
+addListener(eventName: string, listenerFunc: (...args: any[]) => any) => any
+```
+
+| Param              | Type                                 |
+| ------------------ | ------------------------------------ |
+| **`eventName`**    | <code>string</code>                  |
+| **`listenerFunc`** | <code>(...args: {}) =&gt; any</code> |
+
+**Returns:** <code>any</code>
+
+--------------------
+
+
+### removeAllListeners()
+
+```typescript
+removeAllListeners() => any
+```
+
+**Returns:** <code>any</code>
+
+--------------------
+
+
 ### Interfaces
 
 
@@ -599,7 +628,7 @@ addListener(eventName: 'onMapReady', listenerFunc: (results: any) => void) => Pl
 | Prop             | Type                                      |
 | ---------------- | ----------------------------------------- |
 | **`id`**         | <code><a href="#viewid">ViewID</a></code> |
-| **`points`**     | <code>LatLng[]</code>                     |
+| **`points`**     | <code>{}</code>                           |
 | **`tag`**        | <code>any</code>                          |
 | **`color`**      | <code>string</code>                       |
 | **`width`**      | <code>number</code>                       |
@@ -634,7 +663,7 @@ addListener(eventName: 'onMapReady', listenerFunc: (results: any) => void) => Pl
 | Prop              | Type                                      |
 | ----------------- | ----------------------------------------- |
 | **`id`**          | <code><a href="#viewid">ViewID</a></code> |
-| **`points`**      | <code>LatLng[]</code>                     |
+| **`points`**      | <code>{}</code>                           |
 | **`tag`**         | <code>any</code>                          |
 | **`strokeColor`** | <code>string</code>                       |
 | **`fillColor`**   | <code>string</code>                       |
@@ -645,8 +674,8 @@ addListener(eventName: 'onMapReady', listenerFunc: (results: any) => void) => Pl
 
 #### PluginListenerHandle
 
-| Prop         | Type                                      |
-| ------------ | ----------------------------------------- |
-| **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
+| Prop         | Type                      |
+| ------------ | ------------------------- |
+| **`remove`** | <code>() =&gt; any</code> |
 
 </docgen-api>

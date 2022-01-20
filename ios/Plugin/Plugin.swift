@@ -12,6 +12,8 @@ public class CapGoogleMap: CAPPlugin, GMSMapViewDelegate, GMSPanoramaViewDelegat
     var DEFAULT_ZOOM: Double = 12.0;
 
     var hashMap = [Int : GMSMarker]();
+    private var infoWindow = MapMarkerWindow()
+    fileprivate var locationMarker : GMSMarker? = GMSMarker()
 
     @objc func initialize(_ call: CAPPluginCall) {
 
@@ -67,7 +69,7 @@ public class CapGoogleMap: CAPPlugin, GMSMapViewDelegate, GMSPanoramaViewDelegat
         let metadata = call.getObject("metadata") ?? [:]
         let url = URL(string: call.getString("iconUrl", ""))
         let rotation = call.getDouble("rotation") ?? 0
-        let key = call.getString("key", "") ?? ""
+        let key = call.getString("key", "")
         var imageData: Data?
 
         if self.mapViewController == nil {
@@ -107,10 +109,10 @@ public class CapGoogleMap: CAPPlugin, GMSMapViewDelegate, GMSPanoramaViewDelegat
 
                 call.resolve([
                     "markerAdded": true,
-                    "key": key,
                     // get marker specific values
                     "marker": [
-                        "id": marker.hash.hashValue
+                        "id": marker.hash.hashValue,
+                        "key": key
                     ]
                 ])
             }
@@ -541,6 +543,14 @@ public class CapGoogleMap: CAPPlugin, GMSMapViewDelegate, GMSPanoramaViewDelegat
     }
 
     public func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
+        infoWindow.removeFromSuperview()
+        infoWindow = loadNiB()
+        
+        let snippetHtml = try! NSAttributedString(data: NSString(string: marker.snippet ?? "").data(using: String.Encoding.unicode.rawValue)!, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil)
+        
+        infoWindow.htmlInfo.attributedText = snippetHtml
+        self.mapViewController.view.addSubview(infoWindow)
+        
         self.notifyListeners("didTap", data: ["result": [
             "coordinates": [
                 "latitude": marker.position.latitude,
@@ -730,4 +740,9 @@ class GMStreetViewController: UIViewController {
         self.GMapStreetView.camera = camera
         self.view = self.GMapStreetView
     }
+}
+
+func loadNiB() -> MapMarkerWindow {
+    let infoWindow = MapMarkerWindow.instanceFromNib() as! MapMarkerWindow
+    return infoWindow
 }
