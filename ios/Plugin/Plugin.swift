@@ -31,6 +31,10 @@ public class CapGoogleMap: CAPPlugin, GMSMapViewDelegate, GMSPanoramaViewDelegat
     @objc func create(_ call: CAPPluginCall) {
 
         DispatchQueue.main.async {
+            if self.mapViewController != nil {
+                self.mapViewController.view = nil
+            }
+
             self.mapViewController = GMViewController();
             self.mapViewController.mapViewBounds = [
                 "width": call.getDouble("width") ?? 500,
@@ -65,6 +69,11 @@ public class CapGoogleMap: CAPPlugin, GMSMapViewDelegate, GMSPanoramaViewDelegat
         let rotation = call.getDouble("rotation") ?? 0
         let key = call.getString("key", "") ?? ""
         var imageData: Data?
+
+        if self.mapViewController == nil {
+            call.reject("Map is not ready")
+            return
+        }
 
         DispatchQueue.global().async {
 
